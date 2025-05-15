@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+        <style>
+            .admin-body {
+                padding:3rem;
+            }
+        </style>
+    </head>
+    <body class="admin-body">
+        <form class="blog-form" id="new-blog-form" method="POST" action="/admin" >
+            <div class="form-group">
+                <label for="blog-title">Title</label>
+                <input type="text" name="heading" id="blog-title" placeholder="Enter blog title" value="{{post.Heading}}">
+            </div>
+            <div class="form-group">
+                <label for="blog-content">Content</label>
+                <textarea id="blog-content" rows="6" name="description" placeholder="Write your blog content here...">{{post.description}}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="blog-image">Image link</label>
+                <input type="text" name="image_link" placeholder="image link" id="blog-image" value="{{post.image_link}}">
+            </div>
+            <div class="form-group">
+                <label for="blog-image">Read More Link</label>
+                <input type="text" name="read_more_link" placeholder="Past the link" id="blog-image" value="{{post.read_more_link}}">
+            </div>
+            <div class="form-group">
+                <label for="blog-image">Slug</label>
+                <input type="text" name="slug" placeholder="Enter the slug" id="blog-image" value="{{post.Slug}}">
+            </div>
+            <button type="submit" class="btn btn-publish">Publish Post</button>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Settings - Onkar's Blog{% endblock %}
+
+{% block body %}
+<section class="container section">
+  <h1 class="section-title">Account Settings</h1>
+  <form method="POST" enctype="multipart/form-data" class="settings-form">
+    {{ form.hidden_tag() }}
+    
+    <div class="form-group">
+      <label for="username">Username</label>
+      {{ form.username(class="form-input") }}
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      {{ form.email(class="form-input") }}
+    </div>
+
+    <div class="form-group">
+      <label for="avatar">Profile Picture</label>
+      {{ form.avatar(class="form-input") }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

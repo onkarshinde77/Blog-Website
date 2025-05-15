@@ -1,0 +1,255 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.left-side,
+.right-side {
+    padding: 40px;
+    flex: 1;
+}
+
+.left-side {
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Left Side Styles */
+.logo {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo i {
+    color: white;
+    font-size: 40px;
+}
+
+.left-side h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.left-side p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.social-login {
+    width: 100%;
+}
+
+.social-btn {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.social-btn i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.social-btn.google {
+    background: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.social-btn.google:hover {
+    background: #f1f1f1;
+}
+
+.social-btn.facebook {
+    background: #3b5998;
+    color: white;
+}
+
+.social-btn.facebook:hover {
+    background: #344e86;
+}
+
+/* Right Side Styles */
+.login-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border 0.3s ease;
+}
+
+.input-with-icon input:focus {
+    border-color: #667eea;
+    outline: none;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    cursor: pointer;
+    width: 10px;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.remember-me input {
+    margin-right: 8px;
+}
+
+.forgot-password {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #764ba2;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    /* transition: all 0.3s ease; */
+}
+
+.login-btn:hover {
+    /* transform: translateY(-2px); */
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.signup-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.signup-link a:hover {
+    color: #764ba2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .left-side,
+    .right-side {
+        padding: 30px;
+    }
+
+    .left-side {
+        border-bottom: 1px solid #eee;
+    }
+}
