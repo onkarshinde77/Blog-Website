@@ -1619,8 +1619,8 @@ textarea.form-control {
     color: white;
 }
 
-.dropdown-menu.show {
-    display: block;
+.dropdown-menu {
+    display: none;
     position: absolute;
     right: 0;
     top: 100%;

@@ -13,7 +13,7 @@ from wtforms import StringField, FileField
 from wtforms.validators import DataRequired, Email
 
 app = Flask(__name__)
-app.secret_key = "5390 1631 7777"
+app.secret_key = "5390//1631\\7777"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:@localhost/blog_website"
 
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -98,24 +98,22 @@ def login():
         return redirect('/')
         
     if request.method == "POST":
-        identifier = request.form.get("username")
-        password = request.form.get("password")
+        identifier = request.form.get("username1")
+        password = request.form.get("password1")
         
         # Check admin login (now using hashed password)
-        admin_user = User.query.filter_by(username=per_info["username"]).first()
-        if (identifier == per_info["username"] or identifier == per_info['email']) and \
-           admin_user and check_password_hash(admin_user.password, per_info["password"]):
-            login_user(admin_user)
+        if (identifier == per_info["username"] or identifier == per_info['email']) and check_password_hash(per_info["password"],str(password)):
+            # login_user(identifier)
             return redirect('/admin')
+        
         
         # Check regular user login
         user = User.query.filter((User.username == identifier) | (User.email == identifier)).first()
         
-        # This is where you add the password hashing check:
-        if user and check_password_hash(user.password, password):
+        if user and check_password_hash(user.password, str(password)):
             login_user(user)
             flash('Logged in successfully!', 'success')
-            next_page = request.args.get('next')
+            next_page = request.args.get('/')
             return redirect(next_page) if next_page else redirect('/')
         else:
             flash('Login failed. Please check your credentials or sign up.', 'danger')
@@ -123,6 +121,37 @@ def login():
     
     return render_template("login.html")
 
+# @app.route("/login",methods=["GET","POST"])
+# def login():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if request.method == "POST":
+        
+        print("username : ",username)
+        print("password : ",password)
+        
+        if((username == per_info["username"] or username == per_info["email"]) and check_password_hash(per_info["password"],str(password))):
+            session['username'] = username
+            return redirect('/admin')
+        else:
+            user = User.query.filter((User.username == username) | (User.email == username)).first()
+            if user and check_password_hash(user.password,str(password)):
+                
+                print("user logged")
+                print("user : ",user)
+                print("user.password : ",user.password)
+                
+                login_user(user)
+                flash('Logged in successfully!', 'success')
+                session['username'] = username
+                return redirect('/profile',current_user=user)
+            else:
+                flash('Login failed. Please check your credentials or sign up.', 'danger')
+                return redirect('/signUp')
+    return render_template("login.html")
+    
+    
 @app.route("/profile")
 @login_required
 def profile():
@@ -145,7 +174,7 @@ def settings():
 
         db.session.commit()
         flash("Profile updated successfully!", "success")
-        return redirect(url_for('profile'))
+        return redirect('/profile')
 
     form.username.data = current_user.username
     form.email.data = current_user.email
@@ -155,8 +184,8 @@ def settings():
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
-    flash('You have been logged out.', 'info')
+    # logout_user()
+    session.pop('username', None)
     return redirect('/login')
 
 @app.route("/signUp", methods=["GET", "POST"])
@@ -168,6 +197,10 @@ def signUp():
         email = request.form.get("email1")
         username = request.form.get('username1')
         password = request.form.get('password1')
+        confirm_password = request.form.get('confirm_password1')
+        if password != confirm_password:
+            print('Passwords do not match')
+            return redirect('/signUp')
         
         if User.query.filter_by(username=username).first():
             flash('Username already exists', 'error')
@@ -178,7 +211,7 @@ def signUp():
             return redirect('/signUp')
             
         # Add password hashing here:
-        hashed_password = generate_password_hash(password)
+        hashed_password = generate_password_hash(str(password))
         new_user = User(email=email, username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -214,14 +247,14 @@ def contact():
 
 @app.route("/admin",methods=["GET","POST"])
 @login_required
-def admin_post():
-     # Check if current user is admin
-    if not current_user.is_authenticated or current_user.username != per_info["username"]:
-        flash('Admin access required', 'danger')
-        return redirect('/')
-    # if current_user.username != per_info["username"]:
+def admin():
+    #  # Check if current user is admin
+    # if not current_user.is_authenticated or current_user.username != per_info["username"]:
     #     flash('Admin access required', 'danger')
     #     return redirect('/')
+    # # if current_user.username != per_info["username"]:
+    # #     flash('Admin access required', 'danger')
+    # #     return redirect('/')
     post = Blogs_data.query.filter_by().all()
     
     if request.method == "POST" :

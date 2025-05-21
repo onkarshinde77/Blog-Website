@@ -9,7 +9,6 @@
     <div class="profile-info">
       <h2>{{ current_user.username }}</h2>
       <p><strong>Email:</strong> {{ current_user.email }}</p>
-      <p><strong>Joined:</strong> {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
     </div>
     <a href="{{ url_for('settings') }}" class="btn btn-outline">Edit Profile</a>
   </div>
