@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}My Profile - Onkar's Blog{% endblock %}
+
+{% block body %}
+<section class="container section">
+  <h1 class="section-title">My Profile</h1>
+  <div class="profile-card">
+    <img src="{{ url_for('static', filename='images/' + current_user.avatar) if current_user.avatar else url_for('static', filename='uploads/user.png') }}" alt="Profile Image" class="profile-avatar">
+    <div class="profile-info">
+      <h2>{{ current_user.username }}</h2>
+      <p><strong>Email:</strong> {{ current_user.email }}</p>
+    </div>
+    <a href="{{ url_for('settings') }}" class="btn btn-outline">Edit Profile</a>
+  </div>
+</section>
+{% endblock %}

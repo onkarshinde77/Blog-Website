@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+
+        <main class="admin-content">
+            <header class="admin-header">
+                <h1>Admin Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <a href="/" class="btn btn-logout">Logout</a>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Statistics Cards -->
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Users</h3>
+                        <p>1,248</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-green">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Posts</h3>
+                        <p>356</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-orange">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Comments</h3>
+                        <p>1,024</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Views</h3>
+                        <p>24,589</p>
+                    </div>
+                </div>
+
+                <!-- Recent Posts Section -->
+                <section class="content-section">
+                    <div class="section-header">
+                        <h2>Recent Posts</h2>
+                        <a href="#all-posts" class="btn btn-view-all">View All</a>
+                    </div>
+                    <div class="posts-grid">
+                        <div class="post-card">
+                            <img src="https://www.clariontech.com/hubfs/Top%20Emerging%20Technologies%202023%20%282%29.jpg" alt="Post Image">
+                            <div class="post-content">
+                                <h3>Getting Started with React</h3>
+                                <p class="post-meta">Posted on: May 15, 2023 | Views: 1,245</p>
+                                <div class="post-actions">
+                                    <button class="btn btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-card">
+                            <img src="https://i.ytimg.com/vi/OCzzN8VZgfY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDpbGI4ZDaXfAH_MygOU_D_ONy3Og" alt="Post Image">
+                            <div class="post-content">
+                                <h3>CSS Grid Complete Guide</h3>
+                                <p class="post-meta">Posted on: May 10, 2023 | Views: 892</p>
+                                <div class="post-actions">
+                                    <button class="btn btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="admin-form-users">
+                <section class="content-section" id="content-section2">
+                    <div class="section-header">
+                        <h2>Create New Blog</h2>
+                    </div>
+                    <form class="blog-form" id="new-blog-form" method="POST" action="/admin" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="blog-title">Title</label>
+                            <input type="text" name="heading" id="blog-title" placeholder="Enter blog title">
+                        </div>
+                        <div class="form-group">
+                            <label for="blog-content">Content</label>
+                            <textarea id="blog-content" rows="6" name="description" placeholder="Write your blog content here..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="blog-image">Image link</label>
+                            <input type="text" name="image_link" placeholder="image link" id="blog-image">
+                            <input type="file" name="files" id="blog-image">
+                        </div>
+                        <div class="form-group">
+                            <label for="blog-image">Read More Link</label>
+                            <input type="text" name="read_more_link" placeholder="Past the link" id="blog-image">
+                        </div>
+                        <div class="form-group">
+                            <label for="blog-image">Slug</label>
+                            <input type="text" name="slug" placeholder="Enter the slug" id="blog-image">
+                        </div>
+                        <button type="submit" class="btn btn-publish">Publish Post</button>
+                    </form>
+                </section>
+
+                <section class="content-section" id="content-section2">
+                    <div class="section-header">
+                        <h2>User Management</h2>
+                        <a href="#all-users" class="btn btn-view-all">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Heading</th>
+                                    <th>Date</th>
+                                    <th>Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for p in post%}
+                                <tr>
+                                    <td>{{p.Sr}}</td>
+                                    <td>{{p.Heading}}</td>
+                                    <td>{{p.date}}</td>
+                                    <td>
+                                        <a href="/edit/{{p.Sr}}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
+                                        <a href="/delete/{{p.Sr}}" class="btn btn-delete"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
