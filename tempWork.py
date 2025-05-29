@@ -1,5 +1,5 @@
 from flask import Flask
-from db import read_post,get_post
+from db import create_post,create_user,get_user,get_post,read_post
 
 app = Flask(__name__)
 

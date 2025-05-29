@@ -5,6 +5,39 @@ cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+# def create_post(i,h,d,r,s):
+#   post = db.collection(u'blog_data').document()
+#   post.set({
+#       "image_link": i,
+#       "Heading": h,
+#       "description": d,
+#       "read_more_link": r,
+#       "slug": s
+#   })
+    
+def create_user(e,u,p):
+  user = db.collection('user').document()
+  user.set({
+    "email": e,
+    "username":u,
+    "password":p
+  })
+
+def get_user(u):
+  user = db.collection('user').document(u)
+  return user.get().to_dict()
+
+data = [] 
+def get_post():
+  post = db.collection('blog_data').document()
+  # return post.get().to_dict()
+  return data
+   
+def read_post():
+  posts = db.collection(u'blog_data').stream()
+  for post in posts:
+    data.append(post.to_dict())
+  
 all_post = [
     {
       "image_link": "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
@@ -70,28 +103,11 @@ all_post = [
       "slug": "machine-learning-in-healthcare"
     }
 ]
-
-fetch_post = []
-
+  
 def create_post():
     for i in all_post:
         post = db.collection(u'blog_data').document()
         post.set(i)
-    
-def add_post(i,h,d,r,s):
-    post = db.collection(u'blog_data').document()
-    post.set({
-        "image_link": i,
-        "Heading": h,
-        "description": d,
-        "read_more_link": r,
-        "slug": s
-    })
-    
-def read_post():
-    posts = db.collection(u'blog_data').stream()
-    for post in posts:
-        fetch_post.append(post.to_dict())
+        break
 
-def get_post():    
-    return fetch_post
+create_post()
