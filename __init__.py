@@ -97,13 +97,18 @@ def login():
         return redirect('/')
         
     if request.method == "POST":
-        identifier = request.form.get("username1")
+        identifier = request.form.get("email1")
         password = request.form.get("password1")
         
         # Check admin login (now using hashed password)
         if (identifier == per_info['email']) and check_password_hash(per_info["password"],str(password)):
-            login_user(identifier)
-            return redirect('/admin')
+            admin_user = User.query.filter_by(email=per_info['email']).first()
+            if admin_user:
+                login_user(admin_user)
+                return redirect('/admin')
+            else:
+                flash('Admin user not found in database.', 'danger')
+            return redirect('/login')
         
         # Check regular user login
         user = User.query.filter(User.email == identifier).first()
@@ -130,7 +135,7 @@ def profile():
 def settings():
     form = SettingsForm()
     if form.validate_on_submit():
-        current_user.username = form.username.data
+        current_user.name = form.username.data
         current_user.email = form.email.data
 
         avatar_file = form.avatar.data
@@ -144,7 +149,7 @@ def settings():
         flash("Profile updated successfully!", "success")
         return redirect('/profile')
 
-    form.username.data = current_user.username
+    form.username.data = current_user.name
     form.email.data = current_user.email
     return render_template('settings.html', form=form)
 
@@ -217,10 +222,10 @@ def contact():
 @login_required
 def admin():
      # Check if current user is admin
-    if not current_user.is_authenticated or current_user.username != per_info["username"]:
+    if not current_user.is_authenticated or current_user.email != per_info["email"]:
         flash('Admin access required', 'danger')
         return redirect('/')
-    if current_user.username != per_info["username"]:
+    if current_user.email != per_info["email"]:
         flash('Admin access required', 'danger')
         return redirect('/')
     post = Blogs_data.query.filter_by().all()
