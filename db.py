@@ -5,109 +5,128 @@ cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-# def create_post(i,h,d,r,s):
-#   post = db.collection(u'blog_data').document()
-#   post.set({
-#       "image_link": i,
-#       "Heading": h,
-#       "description": d,
-#       "read_more_link": r,
-#       "slug": s
-#   })
-    
-def create_user(e,u,p):
-  user = db.collection('user').document()
-  user.set({
-    "email": e,
-    "username":u,
-    "password":p
+def set_post(i,h,d,r,s):
+  post = db.collection(u'blog_data').document()
+  post.set({
+      "image_link": i,
+      "Heading": h,
+      "description": d,
+      "read_more_link": r,
+      "slug": s
   })
 
-def get_user(u):
-  user = db.collection('user').document(u)
-  return user.get().to_dict()
-
-data = [] 
 def get_post():
-  post = db.collection('blog_data').document()
-  # return post.get().to_dict()
+  data = [] 
+  post = db.collection(u'blog_data').stream()
+  for p in post:
+    data.append(p.to_dict())
   return data
-   
-def read_post():
-  posts = db.collection(u'blog_data').stream()
-  for post in posts:
-    data.append(post.to_dict())
   
-all_post = [
-    {
-      "image_link": "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-      "Heading": "The Future of Artificial Intelligence",
-      "description": "Explore how AI is transforming industries and what the future holds for this groundbreaking technology.",
-      "read_more_link": "/blog/future-of-artificial-intelligence",
-      "slug": "future-of-artificial-intelligence"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1547658719-da2b51169166",
-      "Heading": "Web Development Trends in 2024",
-      "description": "Discover the latest trends in web development including new frameworks, tools, and best practices.",
-      "read_more_link": "/blog/web-development-trends-2024",
-      "slug": "web-development-trends-2024"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1518770660439-4636190af475",
-      "Heading": "Cybersecurity Essentials for Small Businesses",
-      "description": "Protect your business from digital threats with these essential cybersecurity practices.",
-      "read_more_link": "/blog/cybersecurity-for-small-businesses",
-      "slug": "cybersecurity-for-small-businesses"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d",
-      "Heading": "Mobile App Development: Native vs Hybrid",
-      "description": "Compare native and hybrid mobile app development approaches to choose the right one for your project.",
-      "read_more_link": "/blog/native-vs-hybrid-app-development",
-      "slug": "native-vs-hybrid-app-development"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4",
-      "Heading": "Cloud Computing for Beginners",
-      "description": "An introduction to cloud computing concepts, services, and benefits for those just getting started.",
-      "read_more_link": "/blog/cloud-computing-for-beginners",
-      "slug": "cloud-computing-for-beginners"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45",
-      "Heading": "Data Science Career Path Explained",
-      "description": "Learn about the skills, tools, and career opportunities in the growing field of data science.",
-      "read_more_link": "/blog/data-science-career-path",
-      "slug": "data-science-career-path"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1516116216624-53e697fedbea",
-      "Heading": "Blockchain Technology Fundamentals",
-      "description": "Understand the core concepts of blockchain technology and how it's changing digital transactions.",
-      "read_more_link": "/blog/blockchain-fundamentals",
-      "slug": "blockchain-fundamentals"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1518770660439-4636190af475",
-      "Heading": "UI/UX Design Principles for Developers",
-      "description": "Essential design principles every developer should know to create better user experiences.",
-      "read_more_link": "/blog/ui-ux-principles-for-developers",
-      "slug": "ui-ux-principles-for-developers"
-    },
-    {
-      "image_link": "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
-      "Heading": "Machine Learning in Healthcare",
-      "description": "How machine learning is revolutionizing healthcare with predictive analytics and personalized medicine.",
-      "read_more_link": "/blog/machine-learning-in-healthcare",
-      "slug": "machine-learning-in-healthcare"
-    }
-]
-  
-def create_post():
-    for i in all_post:
-        post = db.collection(u'blog_data').document()
-        post.set(i)
-        break
+def set_user(e,u,p):
+  user = db.collection(u'users').document()
+  user.set({
+    "email": e,
+    "name":u,
+    "password":p
+  })
+    
+def get_user():
+  data = []
+  user = db.collection(u'users').stream()
+  for u in user:
+    data.append(u.to_dict())
+  return data
+ 
+def set_contact(n,m,e,d):
+  contact = db.collection(u'contacts').document()
+  contact.set({
+    "name" : n,
+    "mobile" : m,
+    "email" : e,
+    "description" : d
+  })
 
-create_post()
+def get_contact():
+  data =[]
+  contact = db.collection(u'contacts').stream()
+  for c in contact:
+    data.append(c.to_dict())
+  return data
+
+
+  
+# all_post = [
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+#       "Heading": "The Future of Artificial Intelligence",
+#       "description": "Explore how AI is transforming industries and what the future holds for this groundbreaking technology.",
+#       "read_more_link": "/blog/future-of-artificial-intelligence",
+#       "slug": "future-of-artificial-intelligence"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1547658719-da2b51169166",
+#       "Heading": "Web Development Trends in 2024",
+#       "description": "Discover the latest trends in web development including new frameworks, tools, and best practices.",
+#       "read_more_link": "/blog/web-development-trends-2024",
+#       "slug": "web-development-trends-2024"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1518770660439-4636190af475",
+#       "Heading": "Cybersecurity Essentials for Small Businesses",
+#       "description": "Protect your business from digital threats with these essential cybersecurity practices.",
+#       "read_more_link": "/blog/cybersecurity-for-small-businesses",
+#       "slug": "cybersecurity-for-small-businesses"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d",
+#       "Heading": "Mobile App Development: Native vs Hybrid",
+#       "description": "Compare native and hybrid mobile app development approaches to choose the right one for your project.",
+#       "read_more_link": "/blog/native-vs-hybrid-app-development",
+#       "slug": "native-vs-hybrid-app-development"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4",
+#       "Heading": "Cloud Computing for Beginners",
+#       "description": "An introduction to cloud computing concepts, services, and benefits for those just getting started.",
+#       "read_more_link": "/blog/cloud-computing-for-beginners",
+#       "slug": "cloud-computing-for-beginners"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45",
+#       "Heading": "Data Science Career Path Explained",
+#       "description": "Learn about the skills, tools, and career opportunities in the growing field of data science.",
+#       "read_more_link": "/blog/data-science-career-path",
+#       "slug": "data-science-career-path"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1516116216624-53e697fedbea",
+#       "Heading": "Blockchain Technology Fundamentals",
+#       "description": "Understand the core concepts of blockchain technology and how it's changing digital transactions.",
+#       "read_more_link": "/blog/blockchain-fundamentals",
+#       "slug": "blockchain-fundamentals"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1518770660439-4636190af475",
+#       "Heading": "UI/UX Design Principles for Developers",
+#       "description": "Essential design principles every developer should know to create better user experiences.",
+#       "read_more_link": "/blog/ui-ux-principles-for-developers",
+#       "slug": "ui-ux-principles-for-developers"
+#     },
+#     {
+#       "image_link": "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+#       "Heading": "Machine Learning in Healthcare",
+#       "description": "How machine learning is revolutionizing healthcare with predictive analytics and personalized medicine.",
+#       "read_more_link": "/blog/machine-learning-in-healthcare",
+#       "slug": "machine-learning-in-healthcare"
+#     }
+# ]
+  
+# def create_post():
+#     for i in all_post:
+#         post = db.collection(u'blog_data').document()
+#         post.set(i)
+
+# e = "shindeonkar704@gamil.com"
+# u = "Sarkar"
+# p = "scrypt:32768:8:1$8lfKvlwqobGQxZOc$9679c1a77d283820b8208004f535cb75ae99b477c531abb06ffb5bffa15ff7b0780c77950f2834191c426678c889cd90ee16556aa2f530c23edac2b76d851dd6"
+# set_user(e,u,p)

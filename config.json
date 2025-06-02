@@ -9,6 +9,7 @@
         "insta": "www.instagram.com/Onkar.ss77",
         "fecebook": "www.facebook.com",
         "twitter": "www.twitter.com",
-        "upload_location": "D:\\My Learning\\Flask_CWH\\Blog_Website\\static\\uploads"
+        "upload_location": "D:\\My Learning\\Flask_CWH\\Blog_Website\\static\\uploads",
+        "gemini_api_key": "AIzaSyCpR3bYKZGquuMO__OBq8gv11IxlrnwqG4"
     }
 }

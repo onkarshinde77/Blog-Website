@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+
+    /* Floating Button */
+    #chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4f46e5;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    /* Chat Box */
+    #chat-box {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 350px;
+      max-height: 500px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 998;
+    }
+
+    .chat-header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background: #f9f9f9;
+    }
+
+    .message {
+      margin: 10px 0;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.ai {
+      justify-content: flex-start;
+    }
+
+    .message-text {
+      max-width: 75%;
+      padding: 10px;
+      border-radius: 10px;
+      line-height: 1.4;
+    }
+
+    .message.user .message-text {
+      background-color: #4f46e5;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.ai .message-text {
+      background-color: #e5e7eb;
+      color: #111827;
+      border-bottom-left-radius: 0;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-right: 8px;
+    }
+
+    .chat-input button {
+      padding: 8px 12px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .loading {
+      font-size: 14px;
+      color: gray;
+      display: flex;
+      align-items: center;
+    }
+
+    .loading::after {
+      content: '';
+      margin-left: 5px;
+      width: 10px;
+      height: 10px;
+      border: 2px solid #999;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<button id="chat-toggle">💬</button>
+
+<div id="chat-box">
+  <div class="chat-header">🤖 AI Assistant</div>
+  <div class="chat-messages" id="messages"></div>
+  <form class="chat-input" id="chat-form">
+    <input type="text" id="user-input" placeholder="Ask a question..." required />
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+  const chatToggle = document.getElementById('chat-toggle');
+  const chatBox = document.getElementById('chat-box');
+  const messagesDiv = document.getElementById('messages');
+  const chatForm = document.getElementById('chat-form');
+  const userInput = document.getElementById('user-input');
+
+  let isLoading = false;
+
+  chatToggle.addEventListener('click', () => {
+    chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+  });
+
+  chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (isLoading) return;
+
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    addMessage(text, 'user');
+    userInput.value = '';
+    setLoading(true);
+
+    try {
+      const aiReply = await getAIResponse(text);
+      addMessage(aiReply, 'ai');
+    } catch {
+      addMessage("Sorry, I encountered an error. Please try again.", 'ai');
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  function addMessage(text, sender) {
+    const message = document.createElement('div');
+    message.className = `message ${sender}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'message-text';
+    bubble.textContent = text;
+    message.appendChild(bubble);
+    messagesDiv.appendChild(message);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  function setLoading(state) {
+    isLoading = state;
+    if (state) {
+      const loading = document.createElement('div');
+      loading.className = 'message ai loading';
+      loading.id = 'loading-msg';
+      const loadingText = document.createElement('div');
+      loadingText.className = 'message-text';
+      loadingText.textContent = 'Thinking...';
+      loading.appendChild(loadingText);
+      messagesDiv.appendChild(loading);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    } else {
+      const loadingMsg = document.getElementById('loading-msg');
+      if (loadingMsg) loadingMsg.remove();
+    }
+  }
+
+  async function getAIResponse(userText) {
+    // Simulate a real API call with a delay
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    return "This is a simulated answer for: " + userText;
+  }
+</script>
+
+</body>
+</html>
