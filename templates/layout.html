@@ -305,8 +305,8 @@
   <div id="chat-box">
     <div class="chat-header">🤖 Blog Assistant</div>
     <div class="chat-messages" id="messages"></div>
-    <form class="chat-input" id="chat-form">
-      <input type="text" id="user-input" placeholder="Ask about blog posts..." required />
+    <form class="chat-input" id="chat-form" method="POST">
+      <input name = "user-text" type="text" id="user-input" placeholder="Ask about blog posts..." required />
       <button type="submit">Send</button>
     </form>
   </div>

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request,session,redirect,flash
 import json
 from flask_mail import Mail
 import os
+import time
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from datetime import timedelta
@@ -252,21 +253,18 @@ def delete(Sr):
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.json.get('message')
-
-    # Predefined responses
+    user_message = request.form.get('message')
     if "blog" in user_message.lower():
         reply = "We have many interesting blog posts about technology and programming. Check out our /blogs section!"
     elif "contact" in user_message.lower():
         reply = "You can reach us through the contact page at /contact"
     else:
         try:
-            # Gemini API Call
             response = model.generate_content(user_message)
             reply = response.text
+            time.sleep(2000)
         except Exception as e:
             reply = "Sorry, I couldn't get a response at the moment."
-
     return jsonify({'reply': reply})
 
 if __name__ == '__main__':
