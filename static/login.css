@@ -187,6 +187,12 @@ body {
     font-size: 14px;
 }
 
+.wrong-password,
+.wrong-email {
+    color: red;
+    font-size: small;
+}
+
 .remember-me input {
     margin-right: 8px;
 }

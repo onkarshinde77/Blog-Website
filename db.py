@@ -24,19 +24,30 @@ def get_post():
   
 def set_user(e,u,p):
   user = db.collection(u'users').document()
-  user.set({
-    "email": e,
-    "name":u,
-    "password":p
-  })
+  user.set({"email": e,"name":u,"password":p})
     
+# def get_user():
+#   data = []
+#   user = db.collection(u'users').stream()
+#   for u in user:
+#     data.append(u.to_dict())
+#   return data
+
 def get_user():
-  data = []
-  user = db.collection(u'users').stream()
-  for u in user:
-    data.append(u.to_dict())
-  return data
- 
+    data = []
+    user = db.collection(u'users').stream()
+    for u in user:
+        user_dict = u.to_dict()
+        user_dict['id'] = u.id
+        data.append(user_dict)
+    return data
+
+def update_user(current_user):
+  db.collection('users').document(current_user.id).update({
+            'name': current_user.name,
+            'email': current_user.email,
+            'avatar': current_user.avatar
+  })
 def set_contact(n,m,e,d):
   contact = db.collection(u'contacts').document()
   contact.set({

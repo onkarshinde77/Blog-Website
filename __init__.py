@@ -1,21 +1,19 @@
-from flask import Flask, render_template, request,session,redirect,flash
+from flask import Flask, render_template, request,session,redirect,flash,request, jsonify,url_for
 import json
 from flask_mail import Mail
 import os
 import time
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, FileField
-from wtforms.validators import DataRequired, Email
-
 import google.generativeai as genai
-from flask import Flask, request, jsonify
 
-from db import set_post,set_user,get_user,get_post,set_contact,get_contact
+# importing module(files)
+from db import set_post,set_user,get_user,get_post,set_contact,get_contact,update_user
+from model import User
+from form import SettingsForm
 
 app = Flask(__name__)
 app.secret_key = "5390//1631\\7777"
@@ -31,7 +29,6 @@ with open("config.json",'r') as f:
 genai.configure(api_key=per_info["gemini_api_key"])
 model = genai.GenerativeModel("gemini-pro")
 
-   
 app.config['UPLOAD_FOLDER'] = per_info["upload_location"]
 # mail logic
 app.config.update(
@@ -49,7 +46,11 @@ login_manager.login_view = 'login'
 # database connection remaining
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    users = get_user()
+    for user in users:
+        if user['id'] == user_id:
+            return User(user)
+    return None
 
 post =[]
 
@@ -61,7 +62,6 @@ def index():
 @app.route("/about")
 def about():
     return render_template("about.html")
-
 
 @app.route("/blogs")
 def blogs():
@@ -76,36 +76,34 @@ def post_method(post_slug):
     # post = Blogs_data.query.filter_by(Slug=post_slug).first()
     return render_template("post.html",post=post)
 
-# database work remaining
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
         return redirect('/')
-        
+
     if request.method == "POST":
         identifier = request.form.get("email1")
         password = request.form.get("password1")
         
-        # Check admin login (now using hashed password)
-        if (identifier == per_info['email']) and check_password_hash(per_info["password"],str(password)):
-            users = get_user()
-            for user in users:
-                if user.email == identifier:
-                    login_user(user)
-                    return redirect('/')
-            flash('Admin user not found in database.', 'danger')
-            return redirect('/login')
-        
-        # Check regular user login
         users = get_user()
         for user in users:
-            if user.email == identifier and check_password_hash(user.password, str(password)):
-                login_user(user)
-                flash('Logged in successfully!', 'success')
-                next_page = request.args.get('/')
-                return redirect(next_page) if next_page else redirect('/')
-        flash('Login failed. Please check your credentials or sign up.', 'danger')
-        return redirect('/signUp')
+            if (user['email'] == per_info['email'] and user['email']== identifier):
+                if check_password_hash(per_info["password"], str(password)):
+                    user = User(user)
+                    login_user(user)
+                    return redirect(url_for('admin'))
+                else:
+                    flash('Invalid Password','wrong-password')
+            elif(user['email']== identifier):
+                if check_password_hash(user['password'], str(password)):
+                    user = User(user)
+                    login_user(user)
+                    next_page = request.args.get('/')
+                    return redirect(next_page) if next_page else redirect('/')
+                else:
+                    flash('Invalid Password','wrong-password')
+            else:
+                flash('Invalid Email','wrong-email')
     return render_template("login.html")
 
 @app.route("/profile")
@@ -113,7 +111,6 @@ def login():
 def profile():
     return render_template("profile.html")
 
-# database connection remaining
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
@@ -128,11 +125,10 @@ def settings():
             avatar_path = os.path.join(app.root_path, 'static/uploads', filename)
             avatar_file.save(avatar_path)
             current_user.avatar = filename
-
-        db.session.commit()
+            
+        update_user(current_user=current_user)
         flash("Profile updated successfully!", "success")
         return redirect('/profile')
-
     form.username.data = current_user.name
     form.email.data = current_user.email
     return render_template('settings.html', form=form)
@@ -160,8 +156,9 @@ def signUp():
         
         user = get_user()
         for u in user:
-            if u.email == email:
+            if u["email"] == email:
                 flash('Username already exists', 'error')
+                break
 
         hashed_password = generate_password_hash(str(password))
         set_user(email,name,hashed_password)
@@ -193,7 +190,6 @@ def contact():
 @app.route("/admin",methods=["GET","POST"])
 @login_required
 def admin():
-     # Check if current user is admin
     if not current_user.is_authenticated or current_user.email != per_info["email"]:
         flash('Admin access required', 'danger')
         return redirect('/')
@@ -251,9 +247,13 @@ def delete(Sr):
     db.session.commit()
     return redirect("/admin")
 
+import logging
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.form.get('message')
+    data = request.get_json()
+    user_message = data.get('message') if data else ''
+    if not user_message:
+        return jsonify({'reply': "Sorry, I didn't receive any message."})
     if "blog" in user_message.lower():
         reply = "We have many interesting blog posts about technology and programming. Check out our /blogs section!"
     elif "contact" in user_message.lower():
@@ -261,9 +261,11 @@ def chat():
     else:
         try:
             response = model.generate_content(user_message)
+            logging.info(f"API response: {response}")
             reply = response.text
-            time.sleep(2000)
+            time.sleep(2)
         except Exception as e:
+            logging.error(f"Error in chatbot API call: {e}")
             reply = "Sorry, I couldn't get a response at the moment."
     return jsonify({'reply': reply})
 

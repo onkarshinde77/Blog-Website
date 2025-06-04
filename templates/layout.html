@@ -209,8 +209,7 @@
           {% if current_user.is_authenticated %}
             <div class="profile-dropdown">
               <button class="profile-btn"> 
-                <img src="{{ url_for('static', filename='user.png') }}" alt="Profile Image" class="profile-avatar">
-                     alt="User Avatar" class="avatar">
+                <img src="{{ url_for('static', filename='user.png') }}" alt="Profile Image" class="profile-avatar" alt="User Avatar" class="avatar">
                 <span class="username">{{ current_user.username }}</span>
                 <i class="dropdown-icon">▼</i>
               </button>

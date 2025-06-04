@@ -1650,7 +1650,8 @@ textarea.form-control {
 
 /* profile & setting */
 .section {
-    margin-top: 3rem;
+    margin-top: 9rem;
+    margin-bottom: 7rem;
 }
 
 .section-title {
@@ -1667,11 +1668,12 @@ textarea.form-control {
     border: 1px solid #e2e8f0;
     border-radius: 1rem;
     background-color: #f9fafb;
+    max-width: 38rem;
 }
 
 .profile-avatar {
-    width: 120px;
-    height: 120px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #4f46e5;
