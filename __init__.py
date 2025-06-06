@@ -24,8 +24,6 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 with open("config.json",'r') as f:
     per_info = json.load(f)["per_info"]
 
-genai.configure(api_key=per_info["gemini_api_key"])
-model = genai.GenerativeModel("gemini-pro")
 
 app.config['UPLOAD_FOLDER'] = per_info["upload_location"]
 # mail logic
