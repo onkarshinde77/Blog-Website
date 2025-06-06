@@ -1,9 +1,12 @@
 import firebase_admin
-from firebase_admin import credentials,firestore
+from firebase_admin import credentials,firestore , storage
+import uuid
 
 cred = credentials.Certificate("credentials.json")
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred,
+        {'storageBucket':'blog-website-84ade.firebasestorage.app'})
 db = firestore.client()
+bucket = storage.bucket()
 
 def set_post(i,h,d,r,s):
   post = db.collection(u'blog_data').document()
@@ -24,7 +27,15 @@ def get_post():
   
 def set_user(e,u,p):
   user = db.collection(u'users').document()
-  user.set({"email": e,"name":u,"password":p})
+  user.set({"email": e,
+          "name":u,
+          "password":p,
+          "avatar" :
+            {
+              "data":"https://imgs.search.brave.com/KKoyQtYCFjS9FZCPYycyV2vALtfnhqjZqj4USf1Dbjc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzExLzI4LzcyLzUw/LzM2MF9GXzExMjg3/MjUwNDVfMVh2NXh1/WExjQUVXOVNtMFRv/TUpFZVRnWUZQT1VW/MXIuanBn",
+              "filename" : "demo.png"
+            }
+      })
     
 # def get_user():
 #   data = []
@@ -63,6 +74,22 @@ def get_contact():
   for c in contact:
     data.append(c.to_dict())
   return data
+
+def upload_image_to_firebase(file, filename):
+    b = bucket.blob(filename)
+    b.upload_from_file(file.stream)
+    b.make_public()
+    url = b.public_url
+    return url
+  
+def update_user_in_firebase(email, name, image_url=None):
+    users = db.collection('users').stream()
+    for user in users:
+      if(user['email']==email):
+        if image_url:
+          user['avatar'] = image_url
+          break
+
 
 
   

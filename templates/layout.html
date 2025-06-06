@@ -187,7 +187,7 @@
   <nav class="navbar">
     <div class="container">
       <a href="/" class="logo" aria-label="Homepage">
-        <span class="logo-text">Onkar.ss77</span>
+        <img class="logo-image" src="{{ url_for('static', filename='uploads/image.png') }}" alt="logo">
       </a>
       
       <input type="checkbox" id="menu-toggle" class="menu-toggle" />
@@ -209,7 +209,7 @@
           {% if current_user.is_authenticated %}
             <div class="profile-dropdown">
               <button class="profile-btn"> 
-                <img src="{{ url_for('static', filename='user.png') }}" alt="Profile Image" class="profile-avatar" alt="User Avatar" class="avatar">
+                <img src="{{ current_user.avatar }}" alt="Profile Image" class="profile-avatar" alt="User Avatar" class="avatar">
                 <span class="username">{{ current_user.username }}</span>
                 <i class="dropdown-icon">▼</i>
               </button>

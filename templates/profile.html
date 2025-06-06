@@ -5,7 +5,7 @@
 <section class="container section">
   <h1 class="section-title">My Profile</h1>
   <div class="profile-card">
-    <img src="{{ url_for('static', filename='user.png') }}" alt="Profile Image" class="profile-avatar">
+    <img src="{{current_user.avatar}}" alt="Profile Image" class="profile-avatar">
     <div class="profile-info">
       <h2>{{ current_user.name }}</h2>
       <p><strong>Email:</strong> {{ current_user.email }}</p>

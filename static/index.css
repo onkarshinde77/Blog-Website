@@ -150,8 +150,9 @@ img {
     align-items: center;
 }
 
-.logo-text {
-    color: var(--dark);
+.logo-image {
+    width: 8rem;
+    height: 3rem;
 }
 
 .logo-dot {

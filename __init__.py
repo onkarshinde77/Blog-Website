@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import google.generativeai as genai
 
 # importing module(files)
-from db import set_post,set_user,get_user,get_post,set_contact,get_contact,update_user
+from db import set_post,set_user,get_user,get_post,set_contact,get_contact,update_user_in_firebase,upload_image_to_firebase,update_user
 from model import User
 from form import SettingsForm
 
@@ -122,10 +122,11 @@ def settings():
         avatar_file = form.avatar.data
         if avatar_file:
             filename = secure_filename(avatar_file.filename)
-            avatar_path = os.path.join(app.root_path, 'static/uploads', filename)
-            avatar_file.save(avatar_path)
-            current_user.avatar = filename
-            
+            # Upload to Firebase instead of saving locally
+            url = upload_image_to_firebase(avatar_file, filename)
+            current_user.avatar = url
+        form.username.data = current_user.name
+        form.email.data = current_user.email
         update_user(current_user=current_user)
         flash("Profile updated successfully!", "success")
         return redirect('/profile')
@@ -151,14 +152,14 @@ def signUp():
         password = request.form.get('password1')
         confirm_password = request.form.get('confirm_password1')
         if password != confirm_password:
-            print('Passwords do not match')
+            flash('Passwords do not match', 'error')
             return redirect('/signUp')
         
         user = get_user()
         for u in user:
             if u["email"] == email:
                 flash('Username already exists', 'error')
-                break
+                return redirect('/signUp')
 
         hashed_password = generate_password_hash(str(password))
         set_user(email,name,hashed_password)
