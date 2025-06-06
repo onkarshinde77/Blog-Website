@@ -8,8 +8,6 @@ from werkzeug.utils import secure_filename
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import google.generativeai as genai
-
 # importing module(files)
 from db import set_post,set_user,get_user,get_post,set_contact,get_contact,update_user_in_firebase,upload_image_to_firebase,update_user
 from model import User
@@ -260,14 +258,8 @@ def chat():
     elif "contact" in user_message.lower():
         reply = "You can reach us through the contact page at /contact"
     else:
-        try:
-            response = model.generate_content(user_message)
-            logging.info(f"API response: {response}")
-            reply = response.text
-            time.sleep(2)
-        except Exception as e:
-            logging.error(f"Error in chatbot API call: {e}")
-            reply = "Sorry, I couldn't get a response at the moment."
+        logging.error(f"Error in chatbot API call: {e}")
+        reply = "Sorry, I couldn't get a response at the moment."
     return jsonify({'reply': reply})
 
 if __name__ == '__main__':
