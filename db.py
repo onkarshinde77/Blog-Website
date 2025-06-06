@@ -90,6 +90,15 @@ def update_user_in_firebase(email, name, image_url=None):
           user['avatar'] = image_url
           break
 
+def delete_post(post_id):
+    doc_ref = db.collection(u'blog_data').document(post_id)
+    doc = doc_ref.get()
+    if doc.exists:
+        doc_ref.delete()
+        return True
+    else:
+        return False
+
 
 
   

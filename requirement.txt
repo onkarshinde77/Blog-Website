@@ -1,8 +1,6 @@
 npm
 flask
-flask_mysqldb
 Flask-Mail
-flask-sqlalchemy
 flask-login
 flask_wtf
 firebase_admin

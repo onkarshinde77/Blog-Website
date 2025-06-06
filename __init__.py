@@ -21,11 +21,9 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 app.config['SESSION_COOKIE_SECURE'] = True  # For HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
-with open("config.json",'r') as f:
+with open("config.json","r") as f:
     per_info = json.load(f)["per_info"]
 
-
-app.config['UPLOAD_FOLDER'] = per_info["upload_location"]
 # mail logic
 app.config.update(
     MAIL_SERVER = 'smtp.gmail.com',
@@ -171,15 +169,15 @@ def contact():
         description = request.form.get("message")
         set_contact(name,email,mobile ,description)
         # sent to mail
-        # try :
-        #     mail.send_message(
-        #         "New message from : " + name,
-        #         sender=email,
-        #         recipients=[per_info['email']],
-        #         body="Message : \n" +description + "\n" + "Mobile No. : "+mobile + "\n"+email
-        #     )
-        # except Exception as e:
-        #     print(f"An error occurred: {e}")
+        try :
+            mail.send_message(
+                "New message from : " + name,
+                sender=email,
+                recipients=[per_info['email']],
+                body="Message : \n" +description + "\n" + "Mobile No. : "+mobile + "\n"+email
+            )
+        except Exception as e:
+            print(f"An error occurred: {e}")
         return render_template("contact.html",display1=None,display2=True,success=True)
     else:
         return render_template("contact.html",display1=True,display2=None ,success = False)
@@ -221,27 +219,43 @@ def edit_post(Sr):
     if not current_user.is_authenticated or current_user.username != per_info["username"]:
         flash('Admin access required', 'danger')
         return redirect('/')
-    post = Blogs_data.query.filter_by(Sr=Sr).first()
-    if request.method =="POST":
-        post.image_link = request.form.get("image_link")
-        post.Heading = request.form.get("heading")
-        post.description = request.form.get("description")
-        post.read_more_link = request.form.get("read_more_link")
-        post.Slug = request.form.get("slug")
-        db.session.commit()
-        return redirect('/edit/'+Sr)
-    return render_template("edit.html",post=post,success=None)  
+
+    doc_ref = db.collection(u'blog_data').document(Sr)
+    doc = doc_ref.get()
+    if not doc.exists:
+        flash('Post not found', 'danger')
+        return redirect('/admin')
+
+    post = doc.to_dict()
+    if request.method == "POST":
+        updated_data = {
+            "image_link": request.form.get("image_link"),
+            "Heading": request.form.get("heading"),
+            "description": request.form.get("description"),
+            "read_more_link": request.form.get("read_more_link"),
+            "slug": request.form.get("slug")
+        }
+        doc_ref.update(updated_data)
+        flash('Post updated successfully', 'success')
+        return redirect('/edit/' + Sr)
+
+    return render_template("edit.html", post=post, success=None)
 
 # database work remaining
 @app.route("/delete/<string:Sr>",methods=['GET','POST'])
+@login_required
 def delete(Sr):
     if not current_user.is_authenticated or current_user.username != per_info["username"]:
         flash('Admin access required', 'danger')
         return redirect('/')
 
-    post = Blogs_data.query.filter_by(Sr=Sr).first()
-    db.session.delete(post)
-    db.session.commit()
+    from db import delete_post
+    success = delete_post(Sr)
+    if not success:
+        flash('Post not found', 'danger')
+        return redirect('/admin')
+
+    flash('Post deleted successfully', 'success')
     return redirect("/admin")
 
 import logging
