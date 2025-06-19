@@ -32,7 +32,7 @@ def set_user(e,u,p):
           "password":p,
           "avatar" :
             {
-              "data":"https://imgs.search.brave.com/KKoyQtYCFjS9FZCPYycyV2vALtfnhqjZqj4USf1Dbjc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzExLzI4LzcyLzUw/LzM2MF9GXzExMjg3/MjUwNDVfMVh2NXh1/WExjQUVXOVNtMFRv/TUpFZVRnWUZQT1VW/MXIuanBn",
+              "data":"https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?semt=ais_hybrid&w=740",
               "filename" : "demo.png"
             }
       })

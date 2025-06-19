@@ -5,3 +5,4 @@ flask-login
 flask_wtf
 firebase_admin
 email_validator
+gunicorn
